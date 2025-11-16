@@ -17,6 +17,7 @@ import {
   StarIcon,
   HeartIcon,
   EnvelopeIcon,
+  NewspaperIcon,
 } from "@heroicons/react/24/outline";
 import { useShowSidebar } from "@/store/useShowSidebar";
 import { signOut } from "next-auth/react";
@@ -35,10 +36,15 @@ const SIDEBAR_ROUTES = [
     label: "Projects",
     icon: <FolderIcon className="size-5" />,
   },
+  {
+    path: "/newsletters",
+    label: "Newsletter",
+    icon: <NewspaperIcon className="size-5" />,
+  },
 ];
 
 const getSidebarLinkClassName = (currentPath: string, routePath: string) => {
-  const isActive = currentPath === routePath;
+  const isActive = currentPath === routePath || currentPath.startsWith(routePath + "/");
   return `${isActive ? "text-ox-purple" : "text-ox-white"}`;
 };
 

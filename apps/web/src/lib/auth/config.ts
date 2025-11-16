@@ -3,18 +3,37 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { serverTrpc } from "../trpc-server";
 
-export const authConfig: NextAuthOptions = {
-  providers: [
+// build providers array conditionally based on available env vars
+const providers = [];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    })
+  );
+}
+
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  providers.push(
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
       authorization: {
         params: { scope: "read:user user:email" },
       },
+    })
+  );
+}
+
+export const authConfig: NextAuthOptions = {
+  providers: providers.length > 0 ? providers : [
+    // fallback: create a dummy provider to prevent NextAuth errors
+    // this won't work for actual auth but allows the server to start
+    GoogleProvider({
+      clientId: "dummy",
+      clientSecret: "dummy",
     }),
   ],
   callbacks: {
@@ -66,4 +85,5 @@ export const authConfig: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
+  secret: process.env.NEXTAUTH_SECRET || "development-secret-change-in-production",
 };

@@ -17,6 +17,8 @@ import { SUBSCRIPTION_STATUS } from "./constants/subscription.js";
 
 dotenv.config();
 
+console.log("🚀 Starting API server...");
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 const CORS_ORIGINS = process.env.CORS_ORIGINS
@@ -248,8 +250,10 @@ app.post("/webhook/razorpay", async (req: Request, res: Response) => {
   }
 });
 
-// Connect to database
-prismaModule.connectDB();
+// Connect to database (non-blocking)
+prismaModule.connectDB().catch((err) => {
+  console.error("Database connection error:", err);
+});
 
 // Apply rate limiting to tRPC endpoints
 app.use("/trpc", apiLimiter);
@@ -273,5 +277,6 @@ app.use((err: Error, req: Request, res: Response, next: Function) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`tRPC server running on http://localhost:${PORT}`);
+  console.log(`✅ tRPC server running on http://localhost:${PORT}`);
+  console.log(`📡 Server is ready to accept connections`);
 });

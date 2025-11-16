@@ -109,9 +109,15 @@ async function connectDB() {
   try {
     await prisma.$connect();
     console.log("✅ Database connected successfully");
-  } catch (err) {
-    console.error("❌ Database connection failed:", err);
-    process.exit(1);
+  } catch (err: any) {
+    console.error("❌ Database connection failed:", err.message || err);
+    if (process.env.NODE_ENV === "production") {
+      console.error("Exiting in production mode due to database connection failure");
+      process.exit(1);
+    } else {
+      console.warn("⚠️  Continuing in development mode despite database connection failure");
+      console.warn("⚠️  Make sure DATABASE_URL is set in your .env file");
+    }
   }
 }
 
