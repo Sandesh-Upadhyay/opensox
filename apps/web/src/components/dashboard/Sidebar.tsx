@@ -72,33 +72,33 @@ export default function Sidebar({ overlay = false }: { overlay?: boolean }) {
       style={{ width: overlay ? mobileWidth : desktopWidth }}
     >
       {/* Mobile header */}
-      <div className="flex justify-between items-center h-16 px-4 border-b border-ox-header xl:hidden bg-ox-sidebar">
-        <div className="flex items-center">
+      <div className="flex justify-between items-center h-16 px-4 border-b border-ox-header xl:hidden bg-ox-sidebar min-w-0">
+        <div className="flex items-center min-w-0 flex-1 overflow-hidden">
           <Link
             href="/"
-            className="text-xl font-semibold text-ox-white hover:text-ox-purple transition-colors cursor-pointer"
+            className="text-xl font-semibold text-ox-white hover:text-ox-purple transition-colors cursor-pointer truncate block min-w-0"
           >
             Opensox AI
           </Link>
         </div>
-        <IconWrapper onClick={() => setShowSidebar(false)}>
+        <IconWrapper onClick={() => setShowSidebar(false)} className="shrink-0">
           <XMarkIcon className="size-5 text-ox-purple" />
         </IconWrapper>
       </div>
 
       {/* Desktop header with collapse */}
-      <div className="hidden xl:flex items-center justify-between px-4 py-4 border-b border-ox-header bg-ox-sidebar">
+      <div className="hidden xl:flex items-center justify-between px-4 py-4 border-b border-ox-header bg-ox-sidebar min-w-0">
         {!isCollapsed && (
           <Link
             href="/"
-            className="text-[#eaeaea] font-semibold tracking-wide select-none text-xl hover:text-ox-purple transition-colors cursor-pointer"
+            className="text-[#eaeaea] font-semibold tracking-wide select-none text-xl hover:text-ox-purple transition-colors cursor-pointer min-w-0 flex-1 truncate mr-2"
           >
             Opensox AI
           </Link>
         )}
         <IconWrapper
           onClick={toggleCollapsed}
-          className={isCollapsed ? "w-full flex justify-center" : ""}
+          className={`shrink-0 ${isCollapsed ? "w-full flex justify-center" : ""}`}
         >
           {isCollapsed ? (
             <ChevronRightIcon className="size-5 text-ox-purple" />
